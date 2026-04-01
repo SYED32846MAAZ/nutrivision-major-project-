@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🥗 NutriVision: Neural Food Intelligence
 
-## Getting Started
+NutriVision is a premium, AI-driven health platform designed to help you decode your biology through state-of-the-art computer vision and biometric synergy.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Whobee 3D Presence**: Interactive AI assistant that brings your health data to life.
+- **Neural Food Scanner**: Advanced image recognition to instantly identify macros with 99% accuracy.
+- **Biometric Synergy**: Predictive analytics that factor in your specific age, weight, and metabolic baseline.
+- **Admin Subject Overseer**: Global management system for biometric oversight and user lifecycle control.
+- **Social Matrix**: Integrated testimonials and community feedback loop.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technology Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: [Next.js 16](https://nextjs.org/) (Turbopack)
+- **Database**: [Prisma](https://www.prisma.io/) with [Neon PostgreSQL](https://neon.tech/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/) & [Spline 3D](https://spline.design/)
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/) & [Lucide Icons](https://lucide.dev/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏁 Getting Started
 
-## Learn More
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/SYED32846MAAZ/nutrivision.git
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Environment Setup**:
+   Create a `.env` file with the following:
+   ```env
+   DATABASE_URL="your-postgresql-url"
+   GEMINI_API_KEY="your-google-ai-key"
+   NEXTAUTH_SECRET="your-secret-key"
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Launch Evolution**:
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+## 🌐 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The project is optimized for deployment on the **Vercel Platform**. 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built with ❤️ by NutriVision Core
