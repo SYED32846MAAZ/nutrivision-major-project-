@@ -1,6 +1,6 @@
-# 🥗 NutriVision: Neural Food Intelligence
+# 🥗 Balanced Bites: Neural Food Intelligence
 
-NutriVision is a premium, AI-driven health platform designed to help you decode your biology through state-of-the-art computer vision and biometric synergy.
+Balanced Bites is a premium, AI-driven health platform designed to help you decode your biology through state-of-the-art computer vision and biometric synergy.
 
 ## 🚀 Key Features
 
@@ -22,7 +22,7 @@ NutriVision is a premium, AI-driven health platform designed to help you decode 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/SYED32846MAAZ/nutrivision.git
+   git clone https://github.com/SYED32846MAAZ/balanced-bites.git
    ```
 
 2. **Install dependencies**:
@@ -47,4 +47,4 @@ NutriVision is a premium, AI-driven health platform designed to help you decode 
 
 The project is optimized for deployment on the **Vercel Platform**. 
 
-Built with ❤️ by NutriVision Core
+Built with ❤️ by Balanced Bites Core

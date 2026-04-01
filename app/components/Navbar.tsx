@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between items-center p-4 px-6 md:px-12 bg-black/60 backdrop-blur-xl shadow-2xl border-b border-white/5 sticky top-0 z-[100] transition-all">
       <Link href="/" className="text-2xl font-extrabold bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent italic tracking-tighter">
-        NutriVision
+        Balanced Bites
       </Link>
 
       {/* Desktop Navigation */}

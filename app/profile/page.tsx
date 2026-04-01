@@ -62,7 +62,7 @@ export default function ProfilePage() {
         <div className="bg-red-50 p-6 rounded-2xl border border-red-100 mt-8 shadow-inner shadow-red-100/50">
            <h2 className="text-xl font-bold text-red-700 mb-2">Danger Zone</h2>
            <p className="text-red-900/80 text-sm mb-6 leading-relaxed">
-             Permanently flush your account and biological blueprint from the NutriVision central database. This action completely scrubs your AI history. It cannot be reversed.
+             Permanently flush your account and biological blueprint from the Balanced Bites central database. This action completely scrubs your AI history. It cannot be reversed.
            </p>
            <Button 
              onClick={handleDelete}

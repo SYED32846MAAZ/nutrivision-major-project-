@@ -97,7 +97,7 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed"
           >
-            NutriVision utilizes advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk lurking in your daily meals.
+            Balanced Bites utilizes advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk lurking in your daily meals.
           </motion.p>
 
           <motion.div 
@@ -237,7 +237,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
-             { name: "Sarah Johnson", role: "Athlete", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80", text: "NutriVision decoded my recurring fatigue by tracing it back to simple breakfast imbalances I never noticed." },
+             { name: "Sarah Johnson", role: "Athlete", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80", text: "Balanced Bites decoded my recurring fatigue by tracing it back to simple breakfast imbalances I never noticed." },
              { name: "David Smith", role: "Data Scientist", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e", text: "The predictive health risk engine is a game changer. It's like having a nutritionist and a cardiologist in my pocket." },
              { name: "Elena Rodriguez", role: "Yoga Instructor", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330", text: "The UI feels so futuristic and smooth. It makes tracking health feel like playing an advanced dashboard." }
            ].map((user, idx) => (
@@ -289,7 +289,7 @@ export default function Home() {
       <footer className="py-12 border-t border-white/5 bg-black">
          <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-col items-center md:items-start gap-2">
-               <span className="text-2xl font-extrabold bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">NutriVision</span>
+               <span className="text-2xl font-extrabold bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">Balanced Bites</span>
                <p className="text-xs text-gray-600 font-bold uppercase tracking-widest leading-loose">Automated Neural Dietetics Protocol v2.4.9</p>
             </div>
             <div className="flex gap-8 text-sm font-bold text-gray-500">

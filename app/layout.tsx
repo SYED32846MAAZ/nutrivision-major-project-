@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NutriVision | AI Neural Food Intelligence",
+  title: "Balanced Bites | AI Neural Food Intelligence",
   description: "Advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk.",
 };
 
