@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String?
+  email     String     @unique
+  password  String
+  age       Int?
+  weight    Float?
+  height    Float?
+  gender    String?
+  isAdmin   Boolean    @default(false)
+  analyses  Analysis[]
+  createdAt DateTime   @default(now())
+}
+
+model Analysis {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resultText String
+  createdAt  DateTime @default(now())
+}
