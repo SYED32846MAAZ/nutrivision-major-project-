@@ -8,7 +8,18 @@ import { Button } from "@/app/components/ui/neon-button";
 export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [users, setUsers] = useState<{ id: string, name: string, email: string, isAdmin: boolean, age: number, weight: number, height: number, gender: string, createdAt: string, _count: { analyses: number } }[]>([]);
+  const [users, setUsers] = useState<{ 
+    id: string, 
+    name: string | null, 
+    email: string, 
+    isAdmin: boolean, 
+    age: number | null, 
+    weight: number | null, 
+    height: number | null, 
+    gender: string | null, 
+    createdAt: string, 
+    _count: { analyses: number } 
+  }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
