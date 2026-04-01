@@ -108,17 +108,51 @@ export default function AnalyzePage() {
             />
 
             {preview ? (
-              <div className="absolute inset-0 w-full h-full z-10 p-2">
-                 <img src={preview} alt="Upload Preview" className={`w-full h-full object-cover rounded-xl shadow-md transition-all duration-700 ${isLoading ? 'opacity-30 blur-sm scale-110' : 'opacity-100'}`} />
+              <div className="absolute inset-0 w-full h-full z-10 p-2 group">
+                 <img 
+                   src={preview} 
+                   alt="Upload Preview" 
+                   className={`w-full h-full object-cover rounded-xl shadow-md transition-all duration-1000 ${isLoading ? 'opacity-40 grayscale-[0.5] scale-110 blur-[2px]' : 'opacity-100'}`} 
+                 />
                  
                  {/* Scanning Animation Layer */}
                  {isLoading && (
-                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-                      <div className="w-24 h-24 border-4 border-green-500/30 border-t-green-400 rounded-full animate-spin shadow-[0_0_15px_rgba(74,222,128,0.5)]"></div>
-                      <div className="mt-6 text-green-400 font-bold bg-black/60 px-4 py-2 rounded-lg text-sm tracking-widest uppercase animate-pulse backdrop-blur-md border border-green-500/30 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
+                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+                      
+                      {/* Floating Data Points */}
+                      <div className="absolute inset-0 overflow-hidden">
+                        {[...Array(6)].map((_, i) => (
+                          <div 
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_#4ade80]"
+                            style={{
+                              top: `${20 + Math.random() * 60}%`,
+                              left: `${20 + Math.random() * 60}%`,
+                              animationDelay: `${i * 0.4}s`
+                            }}
+                          >
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-green-400/60 uppercase tracking-tighter whitespace-nowrap opacity-0 animate-[fade_3s_ease-in-out_infinite]">
+                              Neural Data Point {i+1}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Central Loader */}
+                      <div className="relative">
+                        <div className="w-28 h-28 border-[1px] border-green-500/10 border-t-green-400 rounded-full animate-[spin_1.5s_linear_infinite] shadow-[0_0_40px_rgba(74,222,128,0.1)]"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                           <div className="w-20 h-20 border-[1px] border-emerald-500/20 border-b-emerald-400 rounded-full animate-[spin_3s_linear_infinite_reverse]"></div>
+                        </div>
+                      </div>
+
+                      <div className="mt-10 text-green-400 font-black bg-black/80 px-5 py-2.5 rounded-full text-[10px] tracking-[0.3em] uppercase animate-pulse backdrop-blur-xl border border-green-500/30 shadow-[0_0_30px_rgba(74,222,128,0.3)]">
                          {loadingPhrases[loadingTextIdx]}
                       </div>
-                      <div className="absolute top-0 left-0 w-full h-1 bg-green-400/80 shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
+
+                      {/* Immersive Laser Sweep */}
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-400 to-transparent shadow-[0_0_25px_#4ade80,0_0_50px_#4ade80] animate-[scan_2.5s_ease-in-out_infinite]"></div>
+                      <div className="absolute top-0 left-0 w-full h-[150px] bg-gradient-to-b from-green-400/5 to-transparent animate-[scan_2.5s_ease-in-out_infinite] opacity-30"></div>
                    </div>
                  )}
               </div>

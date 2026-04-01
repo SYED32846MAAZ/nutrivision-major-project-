@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Space_Grotesk } from "next-auth/next/font/google"; // Using next/font/google
+import { Outfit as OutfitFont, Space_Grotesk as SpaceFont } from "next/font/google";
 import "./globals.css";
 import { ResultProvider } from "./context/ResultContext";
 import { NextAuthProvider } from "./components/NextAuthProvider";
 import Navbar from "./components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = OutfitFont({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceGrotesk = SpaceFont({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased font-sans`}
       >
         <NextAuthProvider>
           <ResultProvider>

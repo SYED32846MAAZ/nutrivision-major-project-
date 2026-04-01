@@ -46,11 +46,18 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-950 text-white overflow-x-hidden selection:bg-green-500/30">
+    <div className="relative min-h-screen w-full mesh-gradient text-white overflow-x-hidden selection:bg-green-500/30">
       
       {/* 1. HERO SECTION (3D Whobee Interactivity) */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
         
+        {/* Floating Particles / Data Noise */}
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-400 rounded-full animate-ping shadow-[0_0_15px_#4ade80]"></div>
+           <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_15px_#10b981] delay-700"></div>
+           <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-white rounded-full animate-ping shadow-[0_0_10px_#fff] delay-500"></div>
+        </div>
+
         {/* Floating Robot Whobee - Background Dynamic Element */}
         <motion.div 
           style={{ opacity: robotOpacity, scale: robotScale }}
@@ -63,7 +70,8 @@ export default function Home() {
         </motion.div>
 
         {/* Hero Overlay Gradient */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/50 pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/50 pointer-events-none" />
+
 
         {/* Hero Content */}
         <div className="relative z-20 text-center max-w-4xl mx-auto space-y-8 mt-[-10vh]">

@@ -6,21 +6,42 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-outfit);
+  --font-mono: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl;
+  }
+  
+  .glass-panel {
+    @apply bg-black/40 backdrop-blur-3xl border border-white/5;
+  }
+
+  .mesh-gradient {
+    background-color: #050505;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(142, 69%, 58%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 50% 0%, hsla(160, 100%, 35%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(142, 69%, 58%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(160, 100%, 35%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, hsla(142, 69%, 58%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(160, 100%, 35%, 0.1) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: mesh 20s ease infinite;
+  }
+
+  @keyframes mesh {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #050505;
+  color: #ffffff;
+  font-family: var(--font-outfit), sans-serif;
 }
+
