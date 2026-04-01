@@ -39,19 +39,25 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const prompt = `Analyze this food image and return formatted markdown strictly representing:
-- Food Name
-- Total Calories
-- Macronutrients (Protein, Carbs, Fats)${
-userContextBlock ? 
-`\n${userContextBlock}- Long-Term Health Risks: Based EXCLUSIVELY on the provided BIOMETRIC PROFILE above, predict specific multi-month or multi-year metabolic, cardiovascular, or physical health risks if this food becomes a regular daily staple for them.
-- Preventative Path: Suggest a safe, highly-actionable preventative nutritional pattern or specific dietary adjustments to mitigate these exact risks for this specific user.` 
-: 
-`\n- Long-Term Health Risks: Predict general multi-month or multi-year metabolic, cardiovascular, or physical health risks if this food becomes a regular daily staple for an average person.
-- Preventative Path: Suggest a safe, highly-actionable preventative nutritional pattern or specific dietary adjustments to mitigate these health risks.`
-}
+    const prompt = `Perform a high-precision nutritional audit of this image.
+STRICT INSTRUCTIONS:
+1. Format your response exactly as follows (Use exact keys for parsing):
+CALORIES: [number]
+PROTEIN: [number]
+CARBS: [number]
+FATS: [number]
+HEALTH_SCORE: [number between 1-10]
 
-Make the layout beautiful with emojis and well-structured headings. Keep it highly professional.`;
+2. Provide a "EXECUTIVE SUMMARY" section:
+- Maximum 3 short, punchy bullet points.
+- No conversational filler or introductory sentences.
+
+3. Provide a "METABOLIC IMPACT" section (Based on Biometrics if provided):
+- Identify exactly 2 high-level risks or benefits.
+${userContextBlock ? 
+`- Use the provided Biometric Profile: Age ${userContextBlock.match(/Age: (\d+)/)?.[1]}, Weight ${userContextBlock.match(/Weight: (\d+)/)?.[1]}kg.` : ""}
+
+Keep the entire response under 150 words. Focus on precision and data.`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,

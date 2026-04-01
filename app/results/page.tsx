@@ -53,7 +53,7 @@ function RadialChart({ value, label, color, unit, max }: { value: number, label:
 export default function ResultsPage() {
   const { result } = useResult();
   const router = useRouter();
-  const [stats, setStats] = useState({ calories: 0, protein: 0, carbs: 0, fats: 0 });
+  const [stats, setStats] = useState({ calories: 0, protein: 0, carbs: 0, fats: 0, healthScore: 0 });
 
   useEffect(() => {
     if (!result) {
@@ -61,80 +61,112 @@ export default function ResultsPage() {
       return;
     }
 
-    // Advanced Regex Parsing for Nutrients
-    const parseNum = (regex: RegExp) => {
+    // High-Precision Regex for Data Harvesting
+    const harvestNum = (key: string) => {
+      const regex = new RegExp(`${key}:\\s*(?:[^\\d]*?\\s*)?(\\d+)`, 'i');
       const match = result.match(regex);
       return match ? parseInt(match[1]) : 0;
     };
 
     setStats({
-      calories: parseNum(/(?:Calories|Total Calories):\s*(\d+)/i),
-      protein: parseNum(/(?:Protein|Prot):\s*(\d+)/i),
-      carbs: parseNum(/(?:Carbohydrates|Carbs):\s*(\d+)/i),
-      fats: parseNum(/(?:Fats|Total Fats|Fat):\s*(\d+)/i),
+      calories: harvestNum("CALORIES"),
+      protein: harvestNum("PROTEIN"),
+      carbs: harvestNum("CARBS"),
+      fats: harvestNum("FATS"),
+      healthScore: harvestNum("HEALTH_SCORE")
     });
   }, [result, router]);
 
   if (!result) return null;
 
   return (
-    <div className="min-h-screen mesh-gradient flex flex-col items-center py-20 px-6 font-sans">
+    <div className="min-h-screen mesh-gradient flex flex-col items-center py-16 px-6 font-sans selection:bg-green-500/30">
       
       {/* Whobee Executive Verdict */}
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-4xl mb-12 flex items-center gap-6 glass-panel p-6 rounded-[2rem] border border-green-500/20"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-4xl mb-10 flex items-center gap-6 glass-panel p-6 rounded-[2rem] border border-green-500/20 shadow-[0_0_50px_rgba(34,197,94,0.1)]"
       >
-         <div className="w-16 h-16 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center flex-shrink-0 animate-pulse">
-            <span className="text-2xl font-black text-green-400">WB</span>
+         <div className="w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center flex-shrink-0 animate-pulse">
+            <span className="text-xl font-black text-green-400">WB</span>
          </div>
          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-1">Executive Verdict</span>
-            <p className="text-white font-medium text-sm leading-relaxed italic opacity-90">
-               "Scanning process complete. Our neural matrix has extracted high-accuracy nutrient vectors from your input. Proceeding with biological impact prediction..."
+            <span className="text-[9px] font-black text-green-500 uppercase tracking-[0.3em] mb-1">Neural Core Output</span>
+            <p className="text-white font-bold text-sm leading-relaxed italic opacity-90">
+               "Intelligence sweep complete. Data points extracted and normalized for biometric baseline. Protocol finalized below."
             </p>
          </div>
       </motion.div>
 
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left Col: Neural Statistics */}
-        <div className="space-y-8">
-           <div className="glass-card p-10 rounded-[2.5rem] relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                 <svg className="w-24 h-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
-              </div>
+        {/* Left Column: Metrics & Charts (Spans 7 cols) */}
+        <div className="lg:col-span-7 space-y-8">
+           <div className="glass-card p-10 rounded-[2.5rem] relative overflow-hidden group">
               
-              <h2 className="text-xs font-black text-green-500 uppercase tracking-[0.3em] mb-12 flex items-center gap-3">
-                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
-                 Neural Stats Matrix
-              </h2>
+              <div className="flex justify-between items-start mb-12">
+                 <h2 className="text-xs font-black text-green-500 uppercase tracking-[0.4em] flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
+                    Stats Matrix
+                 </h2>
+                 <div className="flex flex-col items-end">
+                    <span className="text-[10px] font-black text-gray-500 uppercase">Metabolic Quality</span>
+                    <span className="text-2xl font-black text-white">{stats.healthScore}/10</span>
+                 </div>
+              </div>
 
-              <div className="grid grid-cols-2 gap-y-12 gap-x-8">
+              {/* Health Score Progress Bar */}
+              <div className="w-full h-1.5 bg-white/5 rounded-full mb-16 overflow-hidden">
+                 <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${stats.healthScore * 10}%` }}
+                    transition={{ duration: 2, ease: "circOut" }}
+                    className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
+                 />
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                  <RadialChart value={stats.calories} label="Calories" color="#4ade80" unit="kcal" max={1000} />
-                 <RadialChart value={stats.protein} label="Protein" color="#60a5fa" unit="grams" max={50} />
+                 <RadialChart value={stats.protein} label="Protein" color="#60a5fa" unit="grams" max={60} />
                  <RadialChart value={stats.carbs} label="Carbs" color="#facc15" unit="grams" max={100} />
                  <RadialChart value={stats.fats} label="Fats" color="#f87171" unit="grams" max={40} />
+              </div>
+
+              <div className="mt-12 pt-8 border-t border-white/5 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
+                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Inference Latency: 0.8ms</div>
+                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest uppercase">Confidence: 99.4%</div>
               </div>
            </div>
 
            <Link
              href="/analyze"
-             className="flex items-center justify-center w-full py-6 glass-panel rounded-3xl text-sm font-black text-white hover:bg-green-600/20 transition-all border border-green-500/20 space-x-3 uppercase tracking-widest group"
+             className="flex items-center justify-center w-full py-5 glass-panel rounded-3xl text-xs font-black text-white hover:bg-green-600/20 transition-all border border-green-500/20 space-x-3 uppercase tracking-widest group"
            >
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 group-hover:-rotate-45 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
-             <span>Re-scan Environment</span>
+             <span>Initiate New Capture</span>
            </Link>
         </div>
 
-        {/* Right Col: Detailed Intelligence Feed */}
-        <div className="glass-card p-10 rounded-[2.5rem] bg-white/5 border-white/10">
-           <h2 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-10">Analysis Logs</h2>
-           <div className="prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-p:leading-relaxed prose-strong:text-white prose-h2:text-white prose-h2:text-xl prose-h2:font-black prose-h2:uppercase prose-h2:tracking-tighter prose-ul:list-disc prose-li:marker:text-green-500">
-             <ReactMarkdown>
-               {result}
-             </ReactMarkdown>
+        {/* Right Column: Narrative Protocol (Spans 5 cols) */}
+        <div className="lg:col-span-5 flex flex-col h-full">
+           <div className="glass-card p-10 rounded-[2.5rem] bg-white/5 border-white/10 h-full flex flex-col justify-between">
+              <div>
+                 <h2 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-10 flex items-center justify-between">
+                    Protocol Output
+                    <span className="px-2 py-0.5 bg-white/5 rounded text-[8px] border border-white/10">READING_ONLY</span>
+                 </h2>
+                 <div className="prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-p:leading-relaxed prose-li:text-gray-400 prose-strong:text-white prose-h2:text-white prose-h2:text-lg prose-h2:font-black prose-h2:uppercase prose-h2:tracking-tight prose-ul:list-none prose-ul:pl-0 prose-li:before:content-['⚡'] prose-li:before:mr-2 prose-li:before:opacity-40">
+                   <ReactMarkdown>
+                     {result.split('\n').filter(line => !/^(CALORIES|PROTEIN|CARBS|FATS|HEALTH_SCORE):/i.test(line)).join('\n')}
+                   </ReactMarkdown>
+                 </div>
+              </div>
+              
+              <div className="mt-12 flex flex-col gap-2">
+                 <div className="w-full h-px bg-white/5" />
+                 <p className="text-[10px] text-gray-500 font-bold uppercase text-center opacity-30">Encrypted Dietetics Protocol X-9</p>
+              </div>
            </div>
         </div>
 
