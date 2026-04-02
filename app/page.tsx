@@ -31,7 +31,6 @@ const QUOTES = [
 
 const ROBOT_SCENE_URL = "https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode";
 
-import { BioClock } from "@/app/components/ui/bio-clock";
 import { InteractiveBackground } from "@/app/components/ui/interactive-background";
 
 export default function Home() {
@@ -57,11 +56,6 @@ export default function Home() {
       {/* 1. HERO SECTION (3D Whobee Interactivity) */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
         
-        {/* Floating Bio-Clock Status */}
-        <div className="absolute top-10 right-10 z-50 pointer-events-auto hidden md:block">
-           <BioClock />
-        </div>
-
         {/* Floating Particles / Data Noise */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-400 rounded-full animate-ping shadow-[0_0_15px_#4ade80]"></div>
