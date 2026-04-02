@@ -24,7 +24,7 @@ export function BiologicalFeed() {
   }, []);
 
   return (
-    <div className="flex items-center gap-4 px-6 py-3 glass-panel rounded-full border-green-500/20 max-w-fit mx-auto lg:mx-0">
+    <div className="flex items-center gap-4 px-6 py-3 glass-panel rounded-full border-green-500/20 max-w-fit mx-auto">
       <div className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
       <motion.p
         key={index}

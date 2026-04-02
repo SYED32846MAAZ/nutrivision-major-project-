@@ -105,7 +105,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed text-center"
           >
             Balanced Bites utilizes advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk lurking in your daily meals.
           </motion.p>
@@ -114,7 +114,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col gap-6 justify-center items-center lg:items-start lg:text-left"
+            className="flex flex-col gap-6 justify-center items-center text-center"
           >
             <div className="flex flex-col sm:flex-row gap-4">
               {status === "authenticated" ? (
