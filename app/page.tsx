@@ -19,6 +19,8 @@ import {
   PieChart,
   Activity
 } from "lucide-react";
+import { BiologicalFeed } from "@/app/components/ui/biological-feed";
+
 
 const QUOTES = [
   "Let food be thy medicine, and medicine be thy food. — Hippocrates",
@@ -103,7 +105,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed"
           >
             Balanced Bites utilizes advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk lurking in your daily meals.
           </motion.p>
@@ -112,28 +114,33 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex flex-col gap-6 justify-center items-center lg:items-start lg:text-left"
           >
-            {status === "authenticated" ? (
+            <div className="flex flex-col sm:flex-row gap-4">
+              {status === "authenticated" ? (
+                <Link href="/analyze">
+                  <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase">
+                    Launch Scan
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/register">
+                  <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase shadow-[0_0_30px_rgba(34,197,94,0.3)]">
+                    Join Whobee
+                  </Button>
+                </Link>
+              )}
               <Link href="/analyze">
-                <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase">
-                  Launch Scan
+                <Button variant="ghost" size="lg" className="w-[200px] border-white/10 hover:bg-white/5 backdrop-blur-md">
+                  View demo
                 </Button>
               </Link>
-            ) : (
-              <Link href="/register">
-                <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-                  Join Whobee
-                </Button>
-              </Link>
-            )}
-            <Link href="/analyze">
-              <Button variant="ghost" size="lg" className="w-[200px] border-white/10 hover:bg-white/5 backdrop-blur-md">
-                View demo
-              </Button>
-            </Link>
+            </div>
+            
+            <BiologicalFeed />
           </motion.div>
         </div>
+
 
         {/* Scroll Indicator */}
         <motion.div 

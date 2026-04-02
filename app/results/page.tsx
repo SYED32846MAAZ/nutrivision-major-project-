@@ -53,7 +53,7 @@ function RadialChart({ value, label, color, unit, max }: { value: number, label:
 export default function ResultsPage() {
   const { result } = useResult();
   const router = useRouter();
-  const [stats, setStats] = useState({ calories: 0, protein: 0, carbs: 0, fats: 0, healthScore: 0 });
+  const [stats, setStats] = useState({ foodName: "", calories: 0, protein: 0, carbs: 0, fats: 0, healthScore: 0 });
 
   useEffect(() => {
     if (!result) {
@@ -68,7 +68,14 @@ export default function ResultsPage() {
       return match ? parseInt(match[1]) : 0;
     };
 
+    const harvestString = (key: string) => {
+      const regex = new RegExp(`${key}:\\s*(.*)`, 'i');
+      const match = result.match(regex);
+      return match ? match[1].trim() : "Neural Identification In Progress";
+    };
+
     setStats({
+      foodName: harvestString("FOOD_NAME"),
       calories: harvestNum("CALORIES"),
       protein: harvestNum("PROTEIN"),
       carbs: harvestNum("CARBS"),
@@ -106,10 +113,15 @@ export default function ResultsPage() {
            <div className="glass-card p-10 rounded-[2.5rem] relative overflow-hidden group">
               
               <div className="flex justify-between items-start mb-12">
-                 <h2 className="text-xs font-black text-green-500 uppercase tracking-[0.4em] flex items-center gap-3">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
-                    Stats Matrix
-                 </h2>
+                 <div className="flex flex-col">
+                    <h2 className="text-xs font-black text-green-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-3">
+                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
+                        Stats Matrix
+                    </h2>
+                    <h1 className="text-3xl font-black text-white tracking-tighter capitalize drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                        {stats.foodName}
+                    </h1>
+                 </div>
                  <div className="flex flex-col items-end">
                     <span className="text-[10px] font-black text-gray-500 uppercase">Metabolic Quality</span>
                     <span className="text-2xl font-black text-white">{stats.healthScore}/10</span>
@@ -117,6 +129,7 @@ export default function ResultsPage() {
               </div>
 
               {/* Health Score Progress Bar */}
+
               <div className="w-full h-1.5 bg-white/5 rounded-full mb-16 overflow-hidden">
                  <motion.div 
                     initial={{ width: 0 }}

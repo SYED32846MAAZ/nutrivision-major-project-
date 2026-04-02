@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
     const prompt = `Perform a high-precision nutritional audit of this image.
 STRICT INSTRUCTIONS:
 1. Format your response exactly as follows (Use exact keys for parsing):
+FOOD_NAME: [short name of meal]
 CALORIES: [number]
 PROTEIN: [number]
 CARBS: [number]

@@ -20,10 +20,23 @@ export function InteractiveRobotSpline({ scene, className }: InteractiveRobotSpl
         </div>
       }
     >
-      <Spline
-        scene={scene}
-        className={className} 
-      />
+      <div className="hidden lg:block w-full h-full">
+        <Spline
+          scene={scene}
+          className={className} 
+        />
+      </div>
+      <div className="lg:hidden w-full h-full flex items-center justify-center">
+         <div className="relative w-48 h-48">
+            <div className="absolute inset-0 bg-green-500/20 rounded-full blur-[60px] animate-pulse"></div>
+            <div className="relative z-10 w-full h-full flex items-center justify-center">
+               <div className="w-16 h-16 border border-green-500/30 rounded-2xl bg-white/5 backdrop-blur-xl flex items-center justify-center">
+                  <span className="text-2xl font-black text-green-500">WB</span>
+               </div>
+            </div>
+         </div>
+      </div>
+
     </Suspense>
   );
 }
