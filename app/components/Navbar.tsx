@@ -20,6 +20,10 @@ export default function Navbar() {
       <div className="hidden lg:flex gap-8 items-center">
         {status === "authenticated" && session?.user && (
           <>
+            <Link href="/dashboard" className="text-sm font-bold text-green-500 hover:text-white transition-colors uppercase tracking-widest flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-green-500 animate-pulse rounded-full"></span>
+              Dashboard
+            </Link>
             <Link href="/analyze" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">Analyze</Link>
             <Link href="/history" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">History</Link>
             <Link href="/profile" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">Profile</Link>
@@ -53,6 +57,7 @@ export default function Navbar() {
         <div className="absolute top-[73px] left-0 w-full h-screen bg-black/95 backdrop-blur-3xl z-[90] flex flex-col p-8 gap-8 border-t border-white/5 lg:hidden animate-in fade-in slide-in-from-top-10 duration-300">
            {session?.user ? (
              <>
+               <Link onClick={() => setIsOpen(false)} href="/dashboard" className="text-3xl font-black text-green-500 uppercase italic">Dashboard</Link>
                <Link onClick={() => setIsOpen(false)} href="/analyze" className="text-3xl font-black text-white uppercase italic">Analyze</Link>
                <Link onClick={() => setIsOpen(false)} href="/history" className="text-3xl font-black text-white uppercase italic">History</Link>
                <Link onClick={() => setIsOpen(false)} href="/profile" className="text-3xl font-black text-white uppercase italic">Profile</Link>

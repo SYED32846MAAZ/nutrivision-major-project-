@@ -31,6 +31,9 @@ const QUOTES = [
 
 const ROBOT_SCENE_URL = "https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode";
 
+import { BioClock } from "@/app/components/ui/bio-clock";
+import { InteractiveBackground } from "@/app/components/ui/interactive-background";
+
 export default function Home() {
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
@@ -48,11 +51,17 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="relative min-h-screen w-full mesh-gradient text-white overflow-x-hidden selection:bg-green-500/30">
-      
+    <div className="relative min-h-screen w-full text-white overflow-x-hidden selection:bg-green-500/30">
+      <InteractiveBackground />
+
       {/* 1. HERO SECTION (3D Whobee Interactivity) */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
         
+        {/* Floating Bio-Clock Status */}
+        <div className="absolute top-10 right-10 z-50 pointer-events-auto hidden md:block">
+           <BioClock />
+        </div>
+
         {/* Floating Particles / Data Noise */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-400 rounded-full animate-ping shadow-[0_0_15px_#4ade80]"></div>
@@ -72,11 +81,11 @@ export default function Home() {
         </motion.div>
 
         {/* Hero Overlay Gradient */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/50 pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/20 pointer-events-none" />
 
 
         {/* Hero Content */}
-        <div className="relative z-20 text-center max-w-4xl mx-auto space-y-8 mt-[-10vh]">
+        <div className="relative z-20 text-center max-w-4xl mx-auto space-y-8 mt-[15vh]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,8 +93,8 @@ export default function Home() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]"
           >
             <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-bold tracking-widest uppercase text-green-400">
-              Personalized Intelligence v2.0
+            <span className="text-[10px] font-black tracking-widest uppercase text-green-400">
+              Protocol v3.0 // Neural-Ready
             </span>
           </motion.div>
 
@@ -93,11 +102,11 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9] drop-shadow-2xl"
+            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] drop-shadow-[0_0_80px_rgba(34,197,94,0.15)]"
           >
-            Evolve Your <br />
+            Redesign Your <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-emerald-400 to-green-600">
-              Biology.
+              Metabolism.
             </span>
           </motion.h1>
 
@@ -107,7 +116,7 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed text-center"
           >
-            Balanced Bites utilizes advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk lurking in your daily meals.
+            Whobee AI decodes every high-risk nutrient in sub-second inference. Evolve your binary dietary patterns into high-performance biology.
           </motion.p>
 
           <motion.div 
