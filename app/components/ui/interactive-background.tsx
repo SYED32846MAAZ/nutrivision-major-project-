@@ -1,11 +1,14 @@
 'use client';
 
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useEffect } from 'react';
 
 export function InteractiveBackground() {
   const mouseX = useSpring(0, { stiffness: 300, damping: 30 });
   const mouseY = useSpring(0, { stiffness: 300, damping: 30 });
+
+  const xPercent = useTransform(mouseX, (v) => `${v}%`);
+  const yPercent = useTransform(mouseY, (v) => `${v}%`);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -36,8 +39,8 @@ export function InteractiveBackground() {
         className="absolute inset-0"
         style={{
           background: `radial-gradient(circle at var(--x) var(--y), hsla(142, 69%, 58%, 0.2) 0%, transparent 60%)`,
-          '--x': mouseX.to(v => `${v}%`),
-          '--y': mouseY.to(v => `${v}%`),
+          '--x': xPercent,
+          '--y': yPercent,
         } as any}
       />
     </motion.div>
