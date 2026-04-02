@@ -53,7 +53,16 @@ function RadialChart({ value, label, color, unit, max }: { value: number, label:
 export default function ResultsPage() {
   const { result } = useResult();
   const router = useRouter();
-  const [stats, setStats] = useState({ foodName: "", calories: 0, protein: 0, carbs: 0, fats: 0, healthScore: 0 });
+  const [stats, setStats] = useState({ 
+    foodName: "", 
+    calories: 0, 
+    protein: 0, 
+    carbs: 0, 
+    fats: 0, 
+    healthScore: 0,
+    modifiedFormula: "Calculating Protocol...",
+    metabolicWindow: "Analyzing Window..."
+  });
 
   useEffect(() => {
     if (!result) {
@@ -71,7 +80,7 @@ export default function ResultsPage() {
     const harvestString = (key: string) => {
       const regex = new RegExp(`${key}:\\s*(.*)`, 'i');
       const match = result.match(regex);
-      return match ? match[1].trim() : "Neural Identification In Progress";
+      return match ? match[1].trim().split('\n')[0] : "Neural Identification In Progress";
     };
 
     setStats({
@@ -80,7 +89,9 @@ export default function ResultsPage() {
       protein: harvestNum("PROTEIN"),
       carbs: harvestNum("CARBS"),
       fats: harvestNum("FATS"),
-      healthScore: harvestNum("HEALTH_SCORE")
+      healthScore: harvestNum("HEALTH_SCORE"),
+      modifiedFormula: harvestString("MODIFIED_FORMULA"),
+      metabolicWindow: harvestString("METABOLIC_WINDOW")
     });
   }, [result, router]);
 

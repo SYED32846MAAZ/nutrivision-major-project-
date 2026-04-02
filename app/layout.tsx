@@ -20,8 +20,6 @@ export const metadata: Metadata = {
   description: "Advanced neural computer vision to decode every calorie, micro-nutrient, and long-term health risk.",
 };
 
-import { NeuralCursor } from "./components/ui/neural-cursor";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,9 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased font-sans cursor-none`}
+        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased font-sans`}
       >
-        <NeuralCursor />
         <NextAuthProvider>
           <ResultProvider>
             <Navbar />

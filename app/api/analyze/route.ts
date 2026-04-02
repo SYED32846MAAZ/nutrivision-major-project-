@@ -48,6 +48,8 @@ PROTEIN: [number]
 CARBS: [number]
 FATS: [number]
 HEALTH_SCORE: [number between 1-10]
+MODIFIED_FORMULA: [one specific tip to make meal healthier, 10 words max]
+METABOLIC_WINDOW: [best time to eat this, 5 words max]
 
 2. Provide a "EXECUTIVE SUMMARY" section:
 - Maximum 3 short, punchy bullet points.
