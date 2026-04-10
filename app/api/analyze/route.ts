@@ -62,9 +62,8 @@ ${userContextBlock ?
 
 Keep the entire response under 150 words. Focus on precision and data.`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const fetchOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,13 +85,46 @@ Keep the entire response under 150 words. Focus on precision and data.`;
             },
           ],
         }),
-      }
-    );
+    };
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Gemini API Error:", errorText);
-      throw new Error(`Gemini API returned ${response.status}: ${errorText}`);
+    let response;
+    let retries = 3;
+    let delay = 1000;
+    let errorText = "";
+
+    while (retries > 0) {
+      response = await fetch(url, fetchOptions);
+      if (response.ok) break;
+
+      errorText = await response.text();
+      console.error(`Gemini API Error (${response.status}):`, errorText);
+
+      // Retry on 503 (Service Unavailable) or 429 (Too Many Requests)
+      if (response.status === 503 || response.status === 429) {
+        retries--;
+        if (retries > 0) {
+          console.log(`Rate limit / High demand hit. Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // Exponential backoff
+        }
+      } else {
+        break; // Break on other errors
+      }
+    }
+
+    if (!response || !response.ok) {
+      let userFriendlyError = `Gemini API returned ${response?.status || "Unknown"}: ${errorText}`;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.error?.status === "UNAVAILABLE" || response?.status === 503) {
+            userFriendlyError = "The AI model is currently experiencing high demand. Please try again in a few moments.";
+        } else if (parsed.error?.message) {
+            userFriendlyError = parsed.error.message;
+        }
+      } catch (e) {
+          // If unparseable, keep default
+      }
+      throw new Error(userFriendlyError);
     }
 
     const data = await response.json();
@@ -123,9 +155,12 @@ Keep the entire response under 150 words. Focus on precision and data.`;
 
   } catch (error: any) {
     console.error("ERROR:", error);
+    
+    const isHighDemand = error.message.includes("experiencing high demand");
+    
     return NextResponse.json(
-      { error: "Something went wrong with the API: " + error.message },
-      { status: 500 }
+      { error: isHighDemand ? error.message : "Something went wrong with the API: " + error.message },
+      { status: isHighDemand ? 503 : 500 }
     );
   }
 }
