@@ -67,28 +67,43 @@ Keep the entire response under 150 words. Focus on precision and data.`;
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     let resultText = "";
-    try {
-      const response = await model.generateContent([
-        {
-          inlineData: {
-            mimeType: file.type,
-            data: base64,
+    let retries = 3;
+    let delay = 2000;
+
+    while (retries > 0) {
+      try {
+        const response = await model.generateContent([
+          {
+            inlineData: {
+              mimeType: file.type,
+              data: base64,
+            },
           },
-        },
-        { text: prompt },
-      ]);
-      resultText = response.response.text();
-    } catch (apiError: any) {
-      console.error("SDK Error:", apiError);
-      
-      const errorMsg = apiError.message || "";
-      if (errorMsg.includes("expired") || errorMsg.includes("API_KEY_INVALID")) {
-        throw new Error("Neural Core Authentication Failed: The API key is expired or invalid.");
+          { text: prompt },
+        ]);
+        resultText = response.response.text();
+        break; // Success
+      } catch (apiError: any) {
+        const errorMsg = apiError.message || "";
+        const isRetryable = errorMsg.includes("503") || errorMsg.includes("demand") || errorMsg.includes("overloaded");
+        
+        if (isRetryable && retries > 1) {
+          retries--;
+          console.log(`Neural Core busy. Retrying in ${delay}ms... (${retries} attempts left)`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+          continue;
+        }
+
+        console.error("SDK Error:", apiError);
+        if (errorMsg.includes("expired") || errorMsg.includes("API_KEY_INVALID")) {
+          throw new Error("Neural Core Authentication Failed: The API key is expired or invalid.");
+        }
+        if (errorMsg.includes("quota") || errorMsg.includes("429")) {
+          throw new Error("Neural Core Capacity Reached: Monthly quota exceeded.");
+        }
+        throw new Error(`AI Engine Error: ${apiError.message}`);
       }
-      if (errorMsg.includes("quota") || errorMsg.includes("429")) {
-        throw new Error("Neural Core Capacity Reached: Monthly quota exceeded.");
-      }
-      throw new Error(`AI Engine Error: ${apiError.message}`);
     }
 
     if (!resultText) {
