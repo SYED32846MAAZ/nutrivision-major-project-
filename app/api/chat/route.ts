@@ -23,10 +23,13 @@ export async function POST(req: Request) {
       systemInstruction: systemPrompt
     });
 
-    const history = messages.slice(0, -1).map((m: any) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }));
+    const history = messages.slice(0, -1)
+      .map((m: any) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }))
+      // Gemini requires history to start with 'user' role
+      .filter((m, i) => i > 0 || m.role === 'user');
 
     const chat = model.startChat({
       history: history,
@@ -40,6 +43,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ content: text });
   } catch (error: any) {
     console.error("Chat API Error:", error);
-    return NextResponse.json({ error: error.message || "Unknown Engine Error" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Neural Core Intelligence Sweep Failed." }, { status: 500 });
   }
 }
