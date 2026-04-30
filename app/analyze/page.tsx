@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useResult } from "../context/ResultContext";
 import { Button } from "@/app/components/ui/neon-button";
 import { AILoader } from "@/app/components/ui/ai-loader";
+import { Camera } from "lucide-react";
 
 const loadingPhrases = [
   "Initializing AI vision matrix...",
