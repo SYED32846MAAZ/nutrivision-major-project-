@@ -19,24 +19,19 @@ export async function POST(req: Request) {
     Always prioritize health and safety.`;
 
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      systemInstruction: systemPrompt
+      model: "gemini-1.5-flash-latest"
     });
 
-    const history = messages.slice(0, -1)
-      .map((m: any) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      }))
-      // Gemini requires history to start with 'user' role
-      .filter((m: any, i: number) => i > 0 || m.role === 'user');
+    const prompt = `
+      SYSTEM INSTRUCTION: ${systemPrompt}
+      
+      CHAT HISTORY:
+      ${messages.slice(0, -1).map((m: any) => `${m.role === 'assistant' ? 'Assistant' : 'User'}: ${m.content}`).join('\n')}
+      
+      USER MESSAGE: ${lastMessage}
+    `;
 
-    const chat = model.startChat({
-      history: history,
-    });
-
-    const result = await chat.sendMessage(lastMessage);
-
+    const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
