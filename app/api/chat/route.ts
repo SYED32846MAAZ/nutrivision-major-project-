@@ -40,6 +40,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ content: text });
   } catch (error: any) {
     console.error("Chat API Error:", error);
-    return NextResponse.json({ error: "Failed to connect to Neural Coach." }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Unknown Engine Error" }, { status: 500 });
   }
 }
