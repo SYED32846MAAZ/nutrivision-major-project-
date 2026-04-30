@@ -62,99 +62,40 @@ ${userContextBlock ?
 
 Keep the entire response under 150 words. Focus on precision and data.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
-    const fetchOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const { GoogleGenerativeAI } = require("@google/generative-ai");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    let resultText = "";
+    try {
+      const response = await model.generateContent([
+        {
+          inlineData: {
+            mimeType: file.type,
+            data: base64,
+          },
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  inline_data: {
-                    mime_type: file.type,
-                    data: base64,
-                  },
-                },
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
-        }),
-    };
-
-    let response;
-    let retries = 3;
-    let delay = 1000;
-    let errorText = "";
-
-    while (retries > 0) {
-      response = await fetch(url, fetchOptions);
-      if (response.ok) break;
-
-      errorText = await response.text();
-      console.error(`Gemini API Error (${response.status}):`, errorText);
-
-      // Retry on 503 (Service Unavailable) or 429 (Too Many Requests)
-      if (response.status === 503 || response.status === 429) {
-        retries--;
-        if (retries > 0) {
-          console.log(`Rate limit / High demand hit. Retrying in ${delay}ms...`);
-          await new Promise(resolve => setTimeout(resolve, delay));
-          delay *= 2; // Exponential backoff
-        }
-      } else {
-        break; // Break on other errors
+        { text: prompt },
+      ]);
+      resultText = response.response.text();
+    } catch (apiError: any) {
+      console.error("SDK Error:", apiError);
+      
+      const errorMsg = apiError.message || "";
+      if (errorMsg.includes("expired") || errorMsg.includes("API_KEY_INVALID")) {
+        throw new Error("Neural Core Authentication Failed: The API key is expired or invalid.");
       }
+      if (errorMsg.includes("quota") || errorMsg.includes("429")) {
+        throw new Error("Neural Core Capacity Reached: Monthly quota exceeded.");
+      }
+      throw new Error(`AI Engine Error: ${apiError.message}`);
     }
 
-    if (!response || !response.ok) {
-      console.warn(`Gemini API Error: ${response?.status} - ${errorText}`);
-      
-      const isQuota = response?.status === 429 || errorText.includes("quota");
-      const isExpired = errorText.includes("expired") || errorText.includes("invalid") || response?.status === 400;
-      const isHighDemand = response?.status === 503 || errorText.includes("demand");
-      
-      if (isExpired) {
-         throw new Error("Neural Core Authentication Failed: The API key is expired or invalid. Please update the credential in the system core.");
-      }
-      
-      if (isQuota) {
-         throw new Error("Neural Core Capacity Reached: Monthly quota exceeded. Please upgrade the intelligence tier or switch keys.");
-      }
-
-      if (isHighDemand) {
-         throw new Error("Neural Core Congestion: The engine is experiencing high demand. Please retry the sweep in a few moments.");
-      }
-
-      // If it's a different error, we try to parse the Gemini error message
-      let userFriendlyError = `Gemini API returned ${response?.status || "Unknown"}`;
-      try {
-        const parsed = JSON.parse(errorText);
-        if (parsed.error?.message) {
-            userFriendlyError = parsed.error.message;
-        }
-      } catch (e) {
-        userFriendlyError += `: ${errorText}`;
-      }
-      throw new Error(userFriendlyError);
+    if (!resultText) {
+      throw new Error("Neural Core returned an empty response. Intelligence sweep failed.");
     }
 
-    const data = await response.json();
-    const parts = data?.candidates?.[0]?.content?.parts || [];
-
-    let text = "";
-    for (const part of parts) {
-      if (part.text) {
-        text += part.text + " ";
-      }
-    }
-
-    const finalResult = text.trim() || "No response from AI";
+    const finalResult = resultText.trim();
 
     // Save strictly to DB if authenticated history
     if (userId) {
