@@ -52,11 +52,11 @@ export default function CoachPage() {
       if (data.content) {
         setMessages([...newMessages, { role: 'assistant', content: data.content }])
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: "Protocol Error: Unable to synchronize with Neural Coach. Please check your connection or try again later." }])
+        setMessages([...newMessages, { role: 'assistant', content: `Protocol Error: ${data.error || "Intelligence sweep failed."}` }])
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chat Error:", error)
-      setMessages([...newMessages, { role: 'assistant', content: "Neural Core Failure: A connection timeout occurred. Protocol status: OFFLINE." }])
+      setMessages([...newMessages, { role: 'assistant', content: `Neural Core Failure: ${error.message || "Unknown connectivity error."}` }])
     } finally {
       setIsLoading(false)
     }

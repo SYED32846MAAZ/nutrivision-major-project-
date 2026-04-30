@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -6,6 +5,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Neural Core Authentication Missing." }, { status: 500 });
   }
   
+  const { GoogleGenerativeAI } = require("@google/generative-ai");
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
   try {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     Always prioritize health and safety.`;
 
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash",
+      model: "gemini-1.5-flash",
       systemInstruction: systemPrompt
     });
 
