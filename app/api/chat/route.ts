@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         parts: [{ text: m.content }]
       }))
       // Gemini requires history to start with 'user' role
-      .filter((m, i) => i > 0 || m.role === 'user');
+      .filter((m: any, i: number) => i > 0 || m.role === 'user');
 
     const chat = model.startChat({
       history: history,
