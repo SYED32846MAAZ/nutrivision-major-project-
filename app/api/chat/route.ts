@@ -15,25 +15,30 @@ export async function POST(req: Request) {
     const systemPrompt = `You are the Balanced Bites AI Nutrition Coach. 
     Your goal is to provide professional, data-driven, and encouraging advice about food, calories, diet, and fitness.
     Keep your responses structured, concise, and futuristic in tone (Bio-Intelligence style).
-    Use markdown for formatting. 
-    Always prioritize health and safety.`;
+    Use markdown for formatting. Always prioritize health and safety.`;
 
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash"
-    });
+    const modelNames = ["gemini-1.5-flash", "gemini-2.0-flash"];
+    let text = "";
+    let lastError = "";
 
-    const prompt = `
-      SYSTEM INSTRUCTION: ${systemPrompt}
-      
-      CHAT HISTORY:
-      ${messages.slice(0, -1).map((m: any) => `${m.role === 'assistant' ? 'Assistant' : 'User'}: ${m.content}`).join('\n')}
-      
-      USER MESSAGE: ${lastMessage}
-    `;
+    for (const modelName of modelNames) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const prompt = `CONTEXT: ${systemPrompt}\n\nHISTORY:\n${messages.slice(0, -1).map((m: any) => `${m.role}: ${m.content}`).join('\n')}\n\nUSER: ${lastMessage}`;
+        const result = await model.generateContent(prompt);
+        text = result.response.text();
+        if (text) break;
+      } catch (err: any) {
+        lastError = err.message;
+        if (err.message.includes("429") || err.message.includes("quota")) continue;
+        throw err;
+      }
+    }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    if (!text) {
+      // Graceful Simulation Fallback for high demand
+      text = "System under high load. Neural scan suggests: optimizing your nutrition requires consistent tracking and balanced macronutrient intake. Please try again in a few moments for full high-fidelity analysis.";
+    }
 
     return NextResponse.json({ content: text });
   } catch (error: any) {
