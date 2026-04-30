@@ -4,6 +4,7 @@ import "./globals.css";
 import { ResultProvider } from "./context/ResultContext";
 import { NextAuthProvider } from "./components/NextAuthProvider";
 import Navbar from "./components/Navbar";
+import { ClientProviders } from "./components/ClientProviders";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -28,12 +29,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased font-sans`}
+        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased font-sans bg-black`}
       >
         <NextAuthProvider>
           <ResultProvider>
-            <Navbar />
-            {children}
+            <ClientProviders>
+              <Navbar />
+              <main>
+                {children}
+              </main>
+            </ClientProviders>
           </ResultProvider>
         </NextAuthProvider>
       </body>

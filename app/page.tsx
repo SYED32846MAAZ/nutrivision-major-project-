@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Button } from "@/app/components/ui/neon-button";
-import { InteractiveRobotSpline } from "@/app/components/blocks/interactive-3d-robot";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { 
   Camera, 
   Dna, 
@@ -17,10 +16,15 @@ import {
   ArrowRight,
   BrainCircuit,
   PieChart,
-  Activity
+  Activity,
+  Sparkles
 } from "lucide-react";
 import { BiologicalFeed } from "@/app/components/ui/biological-feed";
-
+import { InteractiveBackground } from "@/app/components/ui/interactive-background";
+import { SplineScene } from "@/app/components/ui/splite";
+import { Spotlight } from "@/app/components/ui/spotlight";
+import { ActivityPanel } from "@/app/components/ui/activity-panel";
+import { ParallaxComponent } from "@/app/components/ui/parallax-scrolling";
 
 const QUOTES = [
   "Let food be thy medicine, and medicine be thy food. — Hippocrates",
@@ -29,9 +33,7 @@ const QUOTES = [
   "To eat is a necessity, but to eat intelligently is an art."
 ];
 
-const ROBOT_SCENE_URL = "https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode";
-
-import { InteractiveBackground } from "@/app/components/ui/interactive-background";
+const SPLINE_MODEL = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -39,8 +41,8 @@ export default function Home() {
   const [quote, setQuote] = useState(QUOTES[0]);
   
   const { scrollYProgress } = useScroll();
-  const robotOpacity = useTransform(scrollYProgress, [0, 0.2], [0.4, 0]);
-  const robotScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
 
   useEffect(() => {
     setMounted(true);
@@ -52,89 +54,72 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full text-white overflow-x-hidden selection:bg-green-500/30">
       <InteractiveBackground />
-
-      {/* 1. HERO SECTION (3D Whobee Interactivity) */}
+      
+      {/* 1. HERO SECTION (Premium 3D Experience) */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+        <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(34, 197, 94, 0.2)" />
         
-        {/* Floating Particles / Data Noise */}
-        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-400 rounded-full animate-ping shadow-[0_0_15px_#4ade80]"></div>
-           <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_15px_#10b981] delay-700"></div>
-           <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-white rounded-full animate-ping shadow-[0_0_10px_#fff] delay-500"></div>
-        </div>
-
-        {/* Floating Robot Whobee - Background Dynamic Element */}
         <motion.div 
-          style={{ opacity: robotOpacity, scale: robotScale }}
-          className="absolute inset-x-0 inset-y-0 z-0 pointer-events-auto"
+          style={{ opacity, scale }}
+          className="absolute inset-0 z-0"
         >
-          <InteractiveRobotSpline
-            scene={ROBOT_SCENE_URL}
-            className="w-full h-full" 
+          <SplineScene 
+            scene={SPLINE_MODEL}
+            className="w-full h-full"
           />
         </motion.div>
 
         {/* Hero Overlay Gradient */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/20 pointer-events-none" />
-
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
 
         {/* Hero Content */}
-        <div className="relative z-20 text-center max-w-4xl mx-auto space-y-8 mt-[15vh]">
+        <div className="relative z-20 text-center max-w-5xl mx-auto space-y-10 mt-[10vh]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]"
+            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-green-500/10 border border-green-500/20 backdrop-blur-xl"
           >
-            <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[10px] font-black tracking-widest uppercase text-green-400">
-              Protocol v3.0 // Neural-Ready
+            <Sparkles className="w-4 h-4 text-green-400 animate-pulse" />
+            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-green-400">
+              Neural Engine v4.0 Active
             </span>
           </motion.div>
 
           <motion.h1 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] drop-shadow-[0_0_80px_rgba(34,197,94,0.15)]"
+            initial={{ opacity: 0, filter: "blur(10px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1 }}
+            className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] drop-shadow-[0_0_50px_rgba(34,197,94,0.3)] italic uppercase"
           >
-            Redesign Your <br />
+            Bio <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-emerald-400 to-green-600">
-              Metabolism.
+              Command.
             </span>
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed text-center"
+            transition={{ delay: 0.5 }}
+            className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed"
           >
-            Whobee AI decodes every high-risk nutrient in sub-second inference. Evolve your binary dietary patterns into high-performance biology.
+            Decode your biology. Our neural food scanner identifies every high-risk nutrient in sub-second inference. 
           </motion.p>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col gap-6 justify-center items-center text-center"
+            transition={{ delay: 0.8 }}
+            className="flex flex-col gap-8 items-center"
           >
             <div className="flex flex-col sm:flex-row gap-4">
-              {status === "authenticated" ? (
-                <Link href="/analyze">
-                  <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase">
-                    Launch Scan
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/register">
-                  <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-                    Join Whobee
-                  </Button>
-                </Link>
-              )}
+              <Link href={status === "authenticated" ? "/analyze" : "/register"}>
+                <Button size="lg" className="h-16 px-10 text-xl font-black tracking-widest uppercase italic shadow-[0_0_50px_rgba(34,197,94,0.4)]">
+                  {status === "authenticated" ? "Execute Scan" : "Begin Protocol"}
+                </Button>
+              </Link>
               <Link href="/analyze">
-                <Button variant="ghost" size="lg" className="w-[200px] border-white/10 hover:bg-white/5 backdrop-blur-md">
+                <Button variant="ghost" size="lg" className="h-16 px-10 border-white/10 hover:bg-white/5 backdrop-blur-md">
                   View demo
                 </Button>
               </Link>
@@ -144,43 +129,48 @@ export default function Home() {
           </motion.div>
         </div>
 
-
         {/* Scroll Indicator */}
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute bottom-10 z-20 flex flex-col items-center gap-2 opacity-50"
         >
-          <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-gray-500">Scroll Down</span>
-          <div className="w-px h-12 bg-gradient-to-b from-green-500 to-transparent" />
+          <div className="w-px h-16 bg-gradient-to-b from-green-500 to-transparent" />
         </motion.div>
       </section>
 
-      {/* 2. FEATURE SHOWCASE (Atomic Grid) */}
-      <section className="relative py-32 px-6 container mx-auto">
-        <div className="text-center mb-20 space-y-4">
-          <h2 className="text-sm font-bold text-green-500 uppercase tracking-[0.4em]">Integrated Capabilities</h2>
-          <h3 className="text-4xl md:text-5xl font-bold tracking-tight">The Neural Architecture</h3>
-        </div>
+      {/* 2. ACTIVITY DASHBOARD (Premium Panel) */}
+      <section className="relative py-20">
+        <ActivityPanel />
+      </section>
 
+      {/* 3. PARALLAX EXPERIENCE */}
+      <section className="relative border-y border-white/5">
+        <ParallaxComponent />
+      </section>
+
+      {/* 4. FEATURE GRID (Atomic Design) */}
+      <section className="relative py-32 px-6 container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
-             { title: "Computer Vision", desc: "Instantly identify 2,500+ food variants with 99.2% accuracy in sub-second inference.", icon: Camera, color: "green" },
-             { title: "Biometric Matrix", desc: "Analysis context adjusts specifically to your age, weight, and metabolic baseline.", icon: Dna, color: "emerald" },
-             { title: "Risk Prediction", desc: "Long-term metabolic forecast maps months of data to predict cardiovascular variance.", icon: TrendingUp, color: "lime" }
+             { title: "Computer Vision", desc: "Instantly identify 2,500+ food variants with 99.2% accuracy.", icon: Camera },
+             { title: "Biometric Matrix", desc: "Analysis adjusts specifically to your metabolic baseline.", icon: Dna },
+             { title: "Risk Prediction", desc: "Maps months of data to predict cardiovascular variance.", icon: TrendingUp }
            ].map((feature, idx) => (
              <motion.div
                key={idx}
-               whileHover={{ y: -10 }}
-               transition={{ duration: 0.3 }}
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: idx * 0.1 }}
              >
-                <Card className="bg-white/[0.03] border-white/10 backdrop-blur-md h-full rounded-[2.5rem] p-4 group transition-all hover:bg-white/5 shadow-none hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.5)]">
-                  <CardHeader className="space-y-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30 flex items-center justify-center">
+                <Card className="bg-white/[0.02] border-white/5 backdrop-blur-xl rounded-[3rem] p-4 group transition-all hover:bg-white/[0.05] shadow-none">
+                  <CardHeader className="space-y-6 p-8">
+                    <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30 flex items-center justify-center">
                        <feature.icon className="w-8 h-8 text-green-400" />
                     </div>
-                    <CardTitle className="text-2xl font-extrabold text-white">{feature.title}</CardTitle>
-                    <CardDescription className="text-gray-400 font-medium leading-relaxed">{feature.desc}</CardDescription>
+                    <CardTitle className="text-3xl font-black text-white italic uppercase tracking-tighter">{feature.title}</CardTitle>
+                    <CardDescription className="text-gray-400 text-lg font-medium leading-relaxed">{feature.desc}</CardDescription>
                   </CardHeader>
                 </Card>
              </motion.div>
@@ -188,114 +178,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. HOW IT WORKS (Vertical Experience) */}
-      <section className="relative py-32 bg-white/[0.02] border-y border-white/5">
+      {/* 5. WORKFLOW SECTION */}
+      <section className="relative py-32 bg-green-500/5">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-center gap-20">
-             
-             {/* Left: Interactive Image/Graphic */}
-             <div className="w-full lg:w-1/2 relative group">
-                <div className="absolute -inset-4 bg-green-500/20 rounded-3xl blur-2xl group-hover:bg-green-500/30 transition-all duration-700" />
-                <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.8 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+               className="w-full lg:w-1/2 relative group"
+             >
+                <div className="absolute -inset-10 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all duration-700" />
+                <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
                    <img 
-                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" 
+                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1200" 
                     alt="AI Food Analysis" 
-                    className="w-full h-[500px] object-cover grayscale hover:grayscale-0 transition-all duration-700 scale-105 hover:scale-100" 
+                    className="w-full h-[600px] object-cover hover:scale-110 transition-all duration-700" 
                   />
-                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
-                      <div className="p-6 bg-black/60 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center gap-4 animate-pulse">
-                         <BrainCircuit className="w-10 h-10 text-green-400" />
+                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <div className="p-8 bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[2rem] flex items-center gap-6 animate-pulse">
+                         <BrainCircuit className="w-12 h-12 text-green-400" />
                          <div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Processing Node</p>
-                            <p className="text-xl font-extrabold">Active Analysis...</p>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Neural Stream</p>
+                            <p className="text-2xl font-black italic tracking-tighter">Scanning Core...</p>
                          </div>
                       </div>
                    </div>
                 </div>
-             </div>
+             </motion.div>
 
-             {/* Right: Steps */}
              <div className="w-full lg:w-1/2 space-y-12">
                 <div className="space-y-4">
-                  <h2 className="text-sm font-bold text-green-500 uppercase tracking-[0.4em]">Operational Workflow</h2>
-                  <h3 className="text-4xl font-bold tracking-tight">Three Seconds to Clarity.</h3>
+                  <h2 className="text-sm font-black text-green-500 uppercase tracking-[0.5em] italic">Neural Workflow</h2>
+                  <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-none italic uppercase">Zero Latency <br /> Protocol.</h3>
                 </div>
 
-                <div className="space-y-10">
+                <div className="space-y-8">
                    {[
-                     { step: "01", title: "Visual Capture", desc: "Upload a single frame of your meal. Our Whobee core identifies ingredients layer-by-layer.", icon: Camera },
-                     { step: "02", title: "Neural Synthesis", desc: "Macros are cross-referenced with your personal biometric profile for extreme precision.", icon: PieChart },
-                     { step: "03", title: "LifePath Mapping", desc: "AI generates a predictive report on long-term risks and specific health adjustments.", icon: Activity }
+                     { step: "01", title: "Visual Capture", desc: "Upload a frame of your meal. Our neural core identifies ingredients layer-by-layer.", icon: Camera },
+                     { step: "02", title: "Biometric Sync", desc: "Macros are cross-referenced with your personal biometric profile for extreme precision.", icon: PieChart },
+                     { step: "03", title: "Metabolic Map", desc: "AI generates a predictive report on long-term risks and health adjustments.", icon: Activity }
                    ].map((step, idx) => (
-                     <div key={idx} className="flex gap-6 group">
-                        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all">
+                     <motion.div 
+                        key={idx} 
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                        className="flex gap-8 group"
+                      >
+                        <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-black text-green-500 text-xl italic group-hover:bg-green-500 group-hover:text-black transition-all">
                            {step.step}
                         </div>
-                        <div className="space-y-1 mt-1">
-                           <h4 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="space-y-2">
+                           <h4 className="text-2xl font-black text-white italic uppercase tracking-tighter">
                              {step.title}
                            </h4>
-                           <p className="text-gray-400 leading-relaxed font-medium">{step.desc}</p>
+                           <p className="text-gray-400 text-lg font-medium leading-relaxed">{step.desc}</p>
                         </div>
-                     </div>
+                     </motion.div>
                    ))}
                 </div>
              </div>
-
           </div>
         </div>
       </section>
 
-      {/* 4. TESTIMONIALS (Human Connection) */}
-      <section className="relative py-32 container mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-sm font-bold text-green-500 uppercase tracking-[0.4em] mb-4">Social Matrix</h2>
-          <h3 className="text-4xl font-bold tracking-tight">The Bio-Feedback Loop</h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           {[
-             { name: "Sarah Johnson", role: "Athlete", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80", text: "Balanced Bites decoded my recurring fatigue by tracing it back to simple breakfast imbalances I never noticed." },
-             { name: "David Smith", role: "Data Scientist", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e", text: "The predictive health risk engine is a game changer. It's like having a nutritionist and a cardiologist in my pocket." },
-             { name: "Elena Rodriguez", role: "Yoga Instructor", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330", text: "The UI feels so futuristic and smooth. It makes tracking health feel like playing an advanced dashboard." }
-           ].map((user, idx) => (
-             <Card key={idx} className="bg-white/[0.02] border-white/5 rounded-[2rem] p-8 flex flex-col gap-6 hover:bg-white/[0.04] transition-all">
-               <div className="flex items-center gap-4">
-                  <img src={user.img} alt={user.name} className="w-14 h-14 rounded-full object-cover border-2 border-green-500/30" />
-                  <div>
-                    <p className="font-bold text-white">{user.name}</p>
-                    <p className="text-xs text-green-500 font-bold uppercase tracking-wider">{user.role}</p>
-                  </div>
-               </div>
-               <p className="text-gray-400 italic leading-relaxed">"{user.text}"</p>
-               <div className="flex gap-1">
-                  {[1,2,3,4,5].map(s => <Zap key={s} className="w-4 h-4 fill-green-500 text-green-500" />)}
-               </div>
-             </Card>
-           ))}
-        </div>
-      </section>
-
-      {/* 5. FINAL CTA (Conversion) */}
+      {/* FINAL CTA */}
       <section className="relative py-40 overflow-hidden">
-         <div className="absolute inset-0 bg-green-500/5 mix-blend-screen pointer-events-none" />
-         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-         
-         <div className="container mx-auto px-6 relative z-10 text-center space-y-10">
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter">
-              Ready to meet <br /> <span className="text-green-500">Your Better Self?</span>
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.1)_0%,transparent_70%)] pointer-events-none" />
+         <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter italic uppercase leading-none">
+              Ready to meet <br /> <span className="text-green-500 drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]">Your Better Self?</span>
             </h2>
-            <p className="text-gray-400 text-xl font-medium max-w-xl mx-auto">
-               Join 50,000+ humans evolving their biology with Whobee AI. Start your neural scan journey now.
+            <p className="text-gray-400 text-2xl font-medium max-w-2xl mx-auto">
+               Join 50,000+ humans evolving their biology with neural dietetics.
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="pt-6 flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link href="/register">
-                 <Button size="lg" className="w-[200px] font-extrabold tracking-widest uppercase">
+                 <Button size="lg" className="h-16 px-12 text-xl font-black tracking-widest uppercase italic">
                    Begin Evolution
                  </Button>
               </Link>
               <Link href="/analyze">
-                 <Button variant="ghost" size="lg" className="w-[200px] border-white/20">
+                 <Button variant="ghost" size="lg" className="h-16 px-12 border-white/20 text-xl font-black tracking-widest uppercase italic">
                    View Demo
                  </Button>
               </Link>
@@ -304,31 +270,32 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="py-12 border-t border-white/5 bg-black">
-         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex flex-col items-center md:items-start gap-2">
-               <span className="text-2xl font-extrabold bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">Balanced Bites</span>
-               <p className="text-xs text-gray-600 font-bold uppercase tracking-widest leading-loose">Automated Neural Dietetics Protocol v2.4.9</p>
+      <footer className="py-20 border-t border-white/5 bg-black">
+         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
+            <div className="flex flex-col items-center md:items-start gap-4">
+               <span className="text-3xl font-black tracking-tighter italic uppercase bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">Balanced Bites</span>
+               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.5em] italic">Neural Dietetics Protocol v4.2.1</p>
             </div>
-            <div className="flex gap-8 text-sm font-bold text-gray-500">
-               <Link href="/" className="hover:text-green-500 transition-colors">Privacy</Link>
-               <Link href="/" className="hover:text-green-500 transition-colors">Security</Link>
-               <Link href="/" className="hover:text-green-500 transition-colors">Neural Latency</Link>
+            <div className="flex gap-12 text-xs font-black uppercase tracking-widest text-gray-500">
+               <Link href="/" className="hover:text-green-500 transition-colors italic">Privacy</Link>
+               <Link href="/" className="hover:text-green-500 transition-colors italic">Security</Link>
+               <Link href="/" className="hover:text-green-500 transition-colors italic">Neural Latency</Link>
             </div>
-            <div className="flex gap-4">
-               <div className="p-2 border border-white/10 rounded-lg hover:border-green-500/30 transition-all cursor-pointer">
-                  <ShieldCheck className="w-5 h-5 text-gray-500" />
+            <div className="flex gap-6">
+               <div className="p-4 border border-white/10 rounded-2xl hover:border-green-500/30 transition-all cursor-pointer bg-white/5">
+                  <ShieldCheck className="w-6 h-6 text-gray-500" />
                </div>
-               <div className="p-2 border border-white/10 rounded-lg hover:border-green-500/30 transition-all cursor-pointer">
-                  <Users className="w-5 h-5 text-gray-500" />
+               <div className="p-4 border border-white/10 rounded-2xl hover:border-green-500/30 transition-all cursor-pointer bg-white/5">
+                  <Users className="w-6 h-6 text-gray-500" />
                </div>
             </div>
          </div>
-         <div className="mt-12 text-center">
-            <p className="text-xs text-gray-700 font-mono italic">"{quote}"</p>
+         <div className="mt-20 text-center">
+            <p className="text-[10px] text-gray-800 font-mono italic">"{quote}"</p>
          </div>
       </footer>
-
     </div>
   );
+}
+
 }
