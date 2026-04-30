@@ -9,17 +9,27 @@ export async function POST(req: Request) {
     const lastMessage = messages[messages.length - 1].content;
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
     const systemPrompt = `You are the Balanced Bites AI Nutrition Coach. 
     Your goal is to provide professional, data-driven, and encouraging advice about food, calories, diet, and fitness.
     Keep your responses structured, concise, and futuristic in tone (Bio-Intelligence style).
     Use markdown for formatting. 
     Always prioritize health and safety.`;
 
-    const result = await model.generateContent([
-      systemPrompt,
-      ...messages.map((m: any) => `${m.role}: ${m.content}`),
-      `user: ${lastMessage}`
+    const history = messages.slice(0, -1).map((m: any) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    const chat = model.startChat({
+      history: history,
+      generationConfig: {
+        maxOutputTokens: 1000,
+      },
+    });
+
+    const result = await chat.sendMessage([
+      { text: `CONTEXT: ${systemPrompt}` },
+      { text: lastMessage }
     ]);
 
     const response = await result.response;

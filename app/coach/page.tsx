@@ -51,9 +51,12 @@ export default function CoachPage() {
       const data = await res.json()
       if (data.content) {
         setMessages([...newMessages, { role: 'assistant', content: data.content }])
+      } else {
+        setMessages([...newMessages, { role: 'assistant', content: "Protocol Error: Unable to synchronize with Neural Coach. Please check your connection or try again later." }])
       }
     } catch (error) {
       console.error("Chat Error:", error)
+      setMessages([...newMessages, { role: 'assistant', content: "Neural Core Failure: A connection timeout occurred. Protocol status: OFFLINE." }])
     } finally {
       setIsLoading(false)
     }

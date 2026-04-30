@@ -28,6 +28,11 @@ export default function Navbar() {
             <Link href="/analyze" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">Analyze</Link>
             <Link href="/history" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">History</Link>
             <Link href="/profile" className="text-sm font-bold text-gray-400 hover:text-green-500 transition-colors uppercase tracking-widest">Profile</Link>
+            {(session.user as any).isAdmin && (
+              <Link href="/admin" className="text-xs font-black bg-violet-600/20 text-violet-400 border border-violet-500/30 px-3 py-1.5 rounded-full hover:bg-violet-600 hover:text-white transition-all uppercase tracking-tighter">
+                 Admin Logic
+              </Link>
+            )}
             <Button onClick={() => signOut({ callbackUrl: '/' })} variant="destructive" size="sm" className="font-bold uppercase tracking-widest">Sign Out</Button>
           </>
         )}
