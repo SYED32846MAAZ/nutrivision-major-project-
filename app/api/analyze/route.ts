@@ -62,7 +62,7 @@ ${userContextBlock ?
 
 Keep the entire response under 150 words. Focus on precision and data.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
     const fetchOptions = {
         method: "POST",
         headers: {
@@ -115,52 +115,32 @@ Keep the entire response under 150 words. Focus on precision and data.`;
     if (!response || !response.ok) {
       console.warn(`Gemini API Error: ${response?.status} - ${errorText}`);
       
-      // Fallback Strategy: If we hit a quota limit (429) or high demand (503), 
-      // we gracefully return a mock demonstration response so the app NEVER crashes.
-      const isQuotaOrDemand = response?.status === 429 || response?.status === 503 || errorText.includes("exceeded");
+      const isQuota = response?.status === 429 || errorText.includes("quota");
+      const isExpired = errorText.includes("expired") || errorText.includes("invalid") || response?.status === 400;
+      const isHighDemand = response?.status === 503 || errorText.includes("demand");
       
-      if (isQuotaOrDemand) {
-        const fallbackResult = `FOOD_NAME: Neural Analysis (Demo Mode)
-CALORIES: 450
-PROTEIN: 35
-CARBS: 40
-FATS: 15
-HEALTH_SCORE: 8
-MODIFIED_FORMULA: Add a side of fresh greens
-METABOLIC_WINDOW: Post-workout
-
-**EXECUTIVE SUMMARY**
-- AI Engine currently at peak capacity or quota limit.
-- Displaying demonstration metrics for UI testing.
-- Excellent balance of macronutrients for recovery.
-
-**METABOLIC IMPACT**
-- Supports steady energy levels.
-- Promotes healthy metabolism.`;
-
-        // Save strictly to DB if authenticated history
-        if (userId) {
-          await prisma.analysis.create({
-            data: {
-              userId,
-              resultText: fallbackResult,
-            },
-          });
-        }
-
-        return NextResponse.json({
-          result: fallbackResult,
-        });
+      if (isExpired) {
+         throw new Error("Neural Core Authentication Failed: The API key is expired or invalid. Please update the credential in the system core.");
+      }
+      
+      if (isQuota) {
+         throw new Error("Neural Core Capacity Reached: Monthly quota exceeded. Please upgrade the intelligence tier or switch keys.");
       }
 
-      // If it's a different error, we throw it
-      let userFriendlyError = `Gemini API returned ${response?.status || "Unknown"}: ${errorText}`;
+      if (isHighDemand) {
+         throw new Error("Neural Core Congestion: The engine is experiencing high demand. Please retry the sweep in a few moments.");
+      }
+
+      // If it's a different error, we try to parse the Gemini error message
+      let userFriendlyError = `Gemini API returned ${response?.status || "Unknown"}`;
       try {
         const parsed = JSON.parse(errorText);
         if (parsed.error?.message) {
             userFriendlyError = parsed.error.message;
         }
-      } catch (e) {}
+      } catch (e) {
+        userFriendlyError += `: ${errorText}`;
+      }
       throw new Error(userFriendlyError);
     }
 

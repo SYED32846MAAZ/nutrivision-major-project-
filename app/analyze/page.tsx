@@ -172,8 +172,21 @@ export default function AnalyzePage() {
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm mt-4 p-4 bg-red-950/40 rounded-xl w-full text-center border border-red-500/20 font-medium">
-              ⚠️ {error}
+            <div className="mt-4 p-5 bg-red-950/40 rounded-2xl w-full border border-red-500/30 backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center gap-3 mb-2">
+                 <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/40">
+                    <span className="text-red-400 font-black text-[10px]">!</span>
+                 </div>
+                 <span className="text-red-400 font-black text-[10px] uppercase tracking-[0.2em]">Engine Failure Detected</span>
+              </div>
+              <p className="text-red-200/80 text-sm font-medium leading-relaxed italic">
+                "{error}"
+              </p>
+              {error.includes("Authentication Failed") && (
+                <p className="text-red-400/60 text-[10px] mt-3 font-bold uppercase tracking-widest border-t border-red-500/10 pt-3">
+                   Protocol: Check .env.local GEMINI_API_KEY
+                </p>
+              )}
             </div>
           )}
 
