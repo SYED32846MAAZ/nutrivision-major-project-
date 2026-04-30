@@ -49,7 +49,7 @@ export function ParallaxComponent() {
 
     return () => {
       ScrollTrigger.getAll().forEach(st => st.kill());
-      gsap.killTweensOf(triggerElement);
+      if (triggerElement) gsap.killTweensOf(triggerElement);
       lenis.destroy();
     };
   }, []);
