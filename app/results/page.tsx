@@ -92,6 +92,7 @@ function CommandCard({ title, content, icon: Icon, color }: { title: string, con
 export default function ResultsPage() {
   const { result, imageUrl } = useResult();
   const router = useRouter();
+  const [isDemo, setIsDemo] = useState(false);
   const [stats, setStats] = useState({ 
     foodName: "", 
     calories: 0, 
@@ -108,6 +109,8 @@ export default function ResultsPage() {
       router.replace("/analyze");
       return;
     }
+
+    setIsDemo(result.includes("DEMO_MODE: TRUE"));
 
     const harvestNum = (key: string) => {
       const regex = new RegExp(`${key}:\\s*(?:[^\\d]*?\\s*)?(\\d+)`, 'i');
@@ -151,10 +154,12 @@ export default function ResultsPage() {
            <motion.div 
              initial={{ opacity: 0, x: -20 }}
              animate={{ opacity: 1, x: 0 }}
-             className="flex items-center gap-4 px-6 py-3 glass-panel rounded-full border-white/5"
+             className={`flex items-center gap-4 px-6 py-3 glass-panel rounded-full border-white/5 ${isDemo ? 'border-yellow-500/30' : ''}`}
            >
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-500">Neural Sync Active</span>
+              <div className={`w-2 h-2 rounded-full ${isDemo ? 'bg-yellow-500 shadow-[0_0_10px_#eab308]' : 'bg-green-500 shadow-[0_0_10px_#22c55e]'} animate-pulse`} />
+              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDemo ? 'text-yellow-500' : 'text-green-500'}`}>
+                {isDemo ? 'Neural Core Overloaded - Demo Mode Active' : 'Neural Sync Active'}
+              </span>
            </motion.div>
 
            <div className="flex gap-4">
