@@ -24,7 +24,7 @@ export default function AnalyzePage() {
   const [loadingTextIdx, setLoadingTextIdx] = useState(0);
   
   const router = useRouter();
-  const { setResult } = useResult();
+  const { setResult, setImageUrl } = useResult();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -68,6 +68,9 @@ export default function AnalyzePage() {
       }
 
       setResult(data.result);
+      if (preview) {
+        setImageUrl(preview);
+      }
       router.push("/results");
     } catch (err: any) {
       console.error("Error:", err);

@@ -5,8 +5,18 @@ import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FileDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  FileDown, 
+  RefreshCcw, 
+  ShieldCheck, 
+  Zap, 
+  Clock, 
+  Dna, 
+  ChevronRight,
+  Sparkles,
+  MessageSquare
+} from "lucide-react";
 
 function RadialChart({ value, label, color, unit, max }: { value: number, label: string, color: string, unit: string, max: number }) {
   const percentage = Math.min((value / max) * 100, 100);
@@ -51,8 +61,36 @@ function RadialChart({ value, label, color, unit, max }: { value: number, label:
   );
 }
 
+function CommandCard({ title, content, icon: Icon, color }: { title: string, content: string, icon: any, color: 'green' | 'blue' | 'yellow' }) {
+  const colorMap = {
+    green: 'border-green-500/20 bg-green-500/5 text-green-400 icon-green-500',
+    blue: 'border-blue-500/20 bg-blue-500/5 text-blue-400 icon-blue-500',
+    yellow: 'border-yellow-500/20 bg-yellow-500/5 text-yellow-400 icon-yellow-500',
+  };
+
+  return (
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className={`p-6 rounded-3xl border ${colorMap[color].split(' ')[0]} ${colorMap[color].split(' ')[1]} backdrop-blur-xl relative overflow-hidden group`}
+    >
+      <div className="relative z-10 flex gap-5 items-start">
+        <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 ${colorMap[color].split(' ')[2]} group-hover:scale-110 transition-transform`}>
+          <Icon className="w-6 h-6" />
+        </div>
+        <div className="space-y-1">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">{title}</h4>
+          <p className="text-sm font-bold text-white leading-relaxed italic">{content}</p>
+        </div>
+      </div>
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <Icon className="w-20 h-20 -mr-8 -mt-8" />
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ResultsPage() {
-  const { result } = useResult();
+  const { result, imageUrl } = useResult();
   const router = useRouter();
   const [stats, setStats] = useState({ 
     foodName: "", 
@@ -71,7 +109,6 @@ export default function ResultsPage() {
       return;
     }
 
-    // High-Precision Regex for Data Harvesting
     const harvestNum = (key: string) => {
       const regex = new RegExp(`${key}:\\s*(?:[^\\d]*?\\s*)?(\\d+)`, 'i');
       const match = result.match(regex);
@@ -99,113 +136,196 @@ export default function ResultsPage() {
   if (!result) return null;
 
   return (
-    <div className="min-h-screen mesh-gradient flex flex-col items-center py-16 px-6 font-sans selection:bg-green-500/30">
+    <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center py-12 px-6 font-sans selection:bg-green-500/30 overflow-x-hidden">
       
-      {/* Whobee Executive Verdict */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-4xl mb-10 flex items-center gap-6 glass-panel p-6 rounded-[2rem] border border-green-500/20 shadow-[0_0_50px_rgba(34,197,94,0.1)]"
-      >
-         <div className="w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center flex-shrink-0 animate-pulse">
-            <span className="text-xl font-black text-green-400">WB</span>
-         </div>
-         <div className="flex flex-col">
-            <span className="text-[9px] font-black text-green-500 uppercase tracking-[0.3em] mb-1">Neural Core Output</span>
-            <p className="text-white font-bold text-sm leading-relaxed italic opacity-90">
-               "Intelligence sweep complete. Data points extracted and normalized for biometric baseline. Protocol finalized below."
-            </p>
-         </div>
-      </motion.div>
+      {/* BACKGROUND EFFECTS */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-green-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px]" />
+      </div>
 
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="relative z-10 w-full max-w-6xl space-y-8">
         
-        {/* Left Column: Metrics & Charts (Spans 7 cols) */}
-        <div className="lg:col-span-7 space-y-8">
-           <div className="glass-card p-10 rounded-[2.5rem] relative overflow-hidden group">
-              
-              <div className="flex justify-between items-start mb-12">
-                 <div className="flex flex-col">
-                    <h2 className="text-xs font-black text-green-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-3">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
-                        Stats Matrix
-                    </h2>
-                    <h1 className="text-3xl font-black text-white tracking-tighter capitalize drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                        {stats.foodName}
-                    </h1>
-                 </div>
-                 <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-black text-gray-500 uppercase">Metabolic Quality</span>
-                    <span className="text-2xl font-black text-white">{stats.healthScore}/10</span>
-                 </div>
-              </div>
+        {/* HEADER / VERDICT */}
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+           <motion.div 
+             initial={{ opacity: 0, x: -20 }}
+             animate={{ opacity: 1, x: 0 }}
+             className="flex items-center gap-4 px-6 py-3 glass-panel rounded-full border-white/5"
+           >
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-500">Neural Sync Active</span>
+           </motion.div>
 
-              {/* Health Score Progress Bar */}
-
-              <div className="w-full h-1.5 bg-white/5 rounded-full mb-16 overflow-hidden">
-                 <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${stats.healthScore * 10}%` }}
-                    transition={{ duration: 2, ease: "circOut" }}
-                    className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
-                 />
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                 <RadialChart value={stats.calories} label="Calories" color="#4ade80" unit="kcal" max={1000} />
-                 <RadialChart value={stats.protein} label="Protein" color="#60a5fa" unit="grams" max={60} />
-                 <RadialChart value={stats.carbs} label="Carbs" color="#facc15" unit="grams" max={100} />
-                 <RadialChart value={stats.fats} label="Fats" color="#f87171" unit="grams" max={40} />
-              </div>
-
-              <div className="mt-12 pt-8 border-t border-white/5 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
-                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Inference Latency: 0.8ms</div>
-                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest uppercase">Confidence: 99.4%</div>
-              </div>
-           </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 mt-8 print:hidden">
-              <Link
-                href="/analyze"
-                className="flex items-center justify-center flex-1 py-5 glass-panel rounded-3xl text-xs font-black text-white hover:bg-green-600/20 transition-all border border-green-500/20 space-x-3 uppercase tracking-widest group"
+           <div className="flex gap-4">
+              <button 
+                onClick={() => router.push('/coach')}
+                className="flex items-center gap-2 px-6 py-3 glass-panel rounded-full border-white/5 hover:bg-white/5 transition-all text-xs font-black uppercase tracking-widest text-emerald-400 group"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 group-hover:-rotate-45 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
-                <span>New Capture</span>
-              </Link>
-              <button
-                onClick={() => window.print()}
-                className="flex items-center justify-center flex-1 py-5 glass-panel rounded-3xl text-xs font-black text-green-500 hover:bg-green-500/10 transition-all border border-green-500/30 space-x-3 uppercase tracking-widest group"
-              >
-                <FileDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
-                <span>Export Dossier</span>
+                <MessageSquare className="w-4 h-4" />
+                Consult AI Coach
               </button>
-            </div>
+              <button 
+                onClick={() => window.print()}
+                className="p-3 glass-panel rounded-full border-white/5 hover:bg-white/5 transition-all"
+              >
+                <FileDown className="w-5 h-5 text-gray-400" />
+              </button>
+           </div>
         </div>
 
-        {/* Right Column: Narrative Protocol (Spans 5 cols) */}
-        <div className="lg:col-span-5 flex flex-col h-full">
-           <div className="glass-card p-10 rounded-[2.5rem] bg-white/5 border-white/10 h-full flex flex-col justify-between">
-              <div>
-                 <h2 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-10 flex items-center justify-between">
-                    Protocol Output
-                    <span className="px-2 py-0.5 bg-white/5 rounded text-[8px] border border-white/10">READING_ONLY</span>
-                 </h2>
-                 <div className="prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-p:leading-relaxed prose-li:text-gray-400 prose-strong:text-white prose-h2:text-white prose-h2:text-lg prose-h2:font-black prose-h2:uppercase prose-h2:tracking-tight prose-ul:list-none prose-ul:pl-0 prose-li:before:content-['⚡'] prose-li:before:mr-2 prose-li:before:opacity-40">
-                   <ReactMarkdown>
-                     {result.split('\n').filter(line => !/^(CALORIES|PROTEIN|CARBS|FATS|HEALTH_SCORE):/i.test(line)).join('\n')}
-                   </ReactMarkdown>
-                 </div>
-              </div>
-              
-              <div className="mt-12 flex flex-col gap-2">
-                 <div className="w-full h-px bg-white/5" />
-                 <p className="text-[10px] text-gray-500 font-bold uppercase text-center opacity-30">Encrypted Dietetics Protocol X-9</p>
-              </div>
-           </div>
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* LEFT COLUMN: IMAGE & CORE STATS */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               {/* Image Preview Card */}
+               <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="relative group h-[400px] rounded-[3rem] overflow-hidden border border-white/10 glass-panel"
+               >
+                  {imageUrl ? (
+                    <img 
+                      src={imageUrl} 
+                      alt="Scanned Food" 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-white/5">
+                       <Zap className="w-12 h-12 text-white/20 animate-pulse" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                     <div className="space-y-1">
+                        <span className="text-[8px] font-black uppercase tracking-[0.4em] text-green-500">Source Capture</span>
+                        <h3 className="text-xl font-black italic uppercase tracking-tighter text-white">Input Frame #721</h3>
+                     </div>
+                     <div className="p-3 glass-panel rounded-2xl border-white/10 backdrop-blur-md">
+                        <Sparkles className="w-5 h-5 text-green-400" />
+                     </div>
+                  </div>
+               </motion.div>
+
+               {/* Health Score & Stats Matrix */}
+               <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.1 }}
+                 className="glass-card p-10 rounded-[3rem] flex flex-col justify-between"
+               >
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-start">
+                       <div className="space-y-1">
+                          <h2 className="text-[10px] font-black text-green-500 uppercase tracking-[0.4em]">Biometric Grade</h2>
+                          <div className="flex items-center gap-2">
+                             <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase">{stats.foodName}</h1>
+                          </div>
+                       </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                       <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-500">
+                          <span>Health Index</span>
+                          <span className="text-white">{stats.healthScore * 10}%</span>
+                       </div>
+                       <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${stats.healthScore * 10}%` }}
+                            transition={{ duration: 1.5, ease: "circOut" }}
+                            className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                          />
+                       </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6 mt-8">
+                     <div className="p-5 glass-panel rounded-3xl border-white/5 flex flex-col items-center">
+                        <span className="text-2xl font-black text-white italic">{stats.calories}</span>
+                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Calories</span>
+                     </div>
+                     <div className="p-5 glass-panel rounded-3xl border-white/5 flex flex-col items-center">
+                        <span className="text-2xl font-black text-white italic">{stats.protein}g</span>
+                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Protein</span>
+                     </div>
+                     <div className="p-5 glass-panel rounded-3xl border-white/5 flex flex-col items-center">
+                        <span className="text-2xl font-black text-white italic">{stats.carbs}g</span>
+                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Carbs</span>
+                     </div>
+                     <div className="p-5 glass-panel rounded-3xl border-white/5 flex flex-col items-center">
+                        <span className="text-2xl font-black text-white italic">{stats.fats}g</span>
+                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Fats</span>
+                     </div>
+                  </div>
+               </motion.div>
+            </div>
+
+            {/* COMMAND CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <CommandCard 
+                 title="Modified Formula" 
+                 content={stats.modifiedFormula} 
+                 icon={ShieldCheck} 
+                 color="green" 
+               />
+               <CommandCard 
+                 title="Metabolic Window" 
+                 content={stats.metabolicWindow} 
+                 icon={Clock} 
+                 color="blue" 
+               />
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: DETAILED ANALYSIS */}
+          <div className="lg:col-span-4 space-y-8">
+             <motion.div 
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="glass-card p-10 rounded-[3rem] h-full flex flex-col"
+             >
+                <div className="flex items-center justify-between mb-10">
+                   <h2 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em]">Protocol Output</h2>
+                   <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+                      <Dna className="w-3 h-3 text-green-400" />
+                      <span className="text-[8px] font-black text-green-400 uppercase tracking-widest italic">Biometrics Synced</span>
+                   </div>
+                </div>
+
+                <div className="flex-1 space-y-8">
+                   <div className="prose prose-invert prose-sm max-w-none">
+                     <ReactMarkdown components={{
+                       h3: ({node, ...props}) => <h3 className="text-lg font-black italic uppercase tracking-tighter text-white mb-4 mt-8 flex items-center gap-2" {...props} />,
+                       p: ({node, ...props}) => <p className="text-gray-400 font-medium leading-relaxed mb-4" {...props} />,
+                       li: ({node, ...props}) => <li className="text-gray-400 font-medium leading-relaxed mb-2 list-none flex items-start gap-3" {...props}>
+                         <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                         {props.children}
+                       </li>
+                     }}>
+                        {result.split('\n').filter(line => !/^(FOOD_NAME|CALORIES|PROTEIN|CARBS|FATS|HEALTH_SCORE|MODIFIED_FORMULA|METABOLIC_WINDOW):/i.test(line)).join('\n')}
+                     </ReactMarkdown>
+                   </div>
+                </div>
+
+                <div className="mt-12 pt-8 border-t border-white/5 space-y-6">
+                   <button 
+                     onClick={() => router.push('/analyze')}
+                     className="w-full py-5 glass-panel rounded-3xl border-white/10 text-white text-xs font-black uppercase tracking-[0.3em] italic hover:bg-white/5 transition-all flex items-center justify-center gap-3 group"
+                   >
+                     <RefreshCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+                     New Scan Sequence
+                   </button>
+                   <p className="text-[8px] text-gray-700 font-black uppercase text-center tracking-[0.5em]">Neural Encryption Key: 0x721_AF_99</p>
+                </div>
+             </motion.div>
+          </div>
+
         </div>
 
       </div>
-
     </div>
   );
 }

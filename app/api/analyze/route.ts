@@ -132,26 +132,7 @@ Keep the entire response under 150 words. Focus on precision and data.`;
     const isHighDemand = error.message.includes("experiencing high demand") || error.message.includes("quota") || error.message.includes("429");
     
     if (isHighDemand) {
-      // High-Fidelity Synthetic Fallback for Analysis
-      return NextResponse.json({
-        result: `FOOD_NAME: Gourmet Steak & Veggies
-CALORIES: 650
-PROTEIN: 45
-CARBS: 25
-FATS: 35
-HEALTH_SCORE: 8
-MODIFIED_FORMULA: Swap steak for grilled salmon to increase Omega-3s.
-METABOLIC_WINDOW: Post-Resistance Training (1-2h)
-
-EXECUTIVE SUMMARY:
-- High protein density optimizes muscle protein synthesis.
-- Moderate glycemic load maintains stable insulin levels.
-- Micronutrient rich via steamed asparagus and carrots.
-
-METABOLIC IMPACT:
-- Iron and B12 support mitochondrial energy production.
-- Saturated fats require moderate portion control for lipids.`
-      });
+      throw new Error("Neural Core is currently experiencing extremely high demand. Please wait a few moments and try again.");
     }
 
     return NextResponse.json(
