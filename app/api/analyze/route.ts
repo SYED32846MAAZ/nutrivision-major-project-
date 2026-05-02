@@ -67,8 +67,8 @@ Keep the entire response under 150 words. Focus on precision and data.`;
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     let resultText = "";
-    let retries = 3;
-    let delay = 2000;
+    let retries = 2; // Reduced from 3
+    let delay = 1000; // Reduced from 2000
 
     while (retries > 0) {
       try {
@@ -91,7 +91,7 @@ Keep the entire response under 150 words. Focus on precision and data.`;
           retries--;
           console.log(`Neural Core busy. Retrying in ${delay}ms... (${retries} attempts left)`);
           await new Promise(resolve => setTimeout(resolve, delay));
-          delay *= 2;
+          delay *= 1.5; // Less aggressive backoff
           continue;
         }
 

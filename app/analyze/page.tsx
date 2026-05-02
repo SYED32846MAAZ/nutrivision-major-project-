@@ -61,7 +61,14 @@ export default function AnalyzePage() {
         body: formData,
       });
 
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || "The Neural Core timed out. Please try again in a few seconds.");
+      }
 
       if (!res.ok || data.error) {
         throw new Error(data?.error || `Analysis failed. Support Code: ${res.status}`);
