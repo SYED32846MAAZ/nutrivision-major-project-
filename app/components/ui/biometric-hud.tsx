@@ -27,13 +27,14 @@ function HudStat({ label, value, icon: Icon, color }: HudStatProps) {
   );
 }
 
-export function BiometricHud({ side }: { side: 'left' | 'right' }) {
+export function BiometricHud({ side, style }: { side: 'left' | 'right', style?: any }) {
   return (
     <motion.div
       initial={{ opacity: 0, x: side === 'left' ? -100 : 100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
-      className={`hidden lg:flex flex-col gap-8 p-8 glass-panel rounded-[2rem] border-white/5 backdrop-blur-3xl fixed ${
+      style={style}
+      className={`hidden lg:flex flex-col gap-8 p-8 glass-panel rounded-[2rem] border-white/5 backdrop-blur-3xl absolute ${
         side === 'left' ? 'left-10' : 'right-10'
       } top-1/2 -translate-y-1/2 z-30 w-64`}
     >

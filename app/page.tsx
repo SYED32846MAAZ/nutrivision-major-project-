@@ -74,8 +74,8 @@ export default function Home() {
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
 
         {/* Biometric Side Panels */}
-        <BiometricHud side="left" />
-        <BiometricHud side="right" />
+        <BiometricHud side="left" style={{ opacity }} />
+        <BiometricHud side="right" style={{ opacity }} />
 
         {/* Hero Content */}
         <div className="relative z-20 text-center max-w-5xl mx-auto space-y-10 mt-[10vh]">
