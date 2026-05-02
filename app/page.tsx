@@ -25,6 +25,7 @@ import { SplineScene } from "@/app/components/ui/splite";
 import { Spotlight } from "@/app/components/ui/spotlight";
 import { ActivityPanel } from "@/app/components/ui/activity-panel";
 import { ParallaxComponent } from "@/app/components/ui/parallax-scrolling";
+import { BiometricHud } from "@/app/components/ui/biometric-hud";
 
 const QUOTES = [
   "Let food be thy medicine, and medicine be thy food. — Hippocrates",
@@ -71,6 +72,10 @@ export default function Home() {
 
         {/* Hero Overlay Gradient */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
+
+        {/* Biometric Side Panels */}
+        <BiometricHud side="left" />
+        <BiometricHud side="right" />
 
         {/* Hero Content */}
         <div className="relative z-20 text-center max-w-5xl mx-auto space-y-10 mt-[10vh]">
